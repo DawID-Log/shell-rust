@@ -10,8 +10,6 @@ Note: This section is for stages 2 and beyond.
 1. Run `./your_shell.sh` to run your program, which is implemented in
    `src/main.rs`. This command compiles your Rust project, so it might be slow
    the first time you run it. Subsequent runs will be fast.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
 
 I used WSL and I chose to use “Ubuntu”:
 ```sh

@@ -4,26 +4,27 @@ use std::io::{self, Write};
 fn handle_command(input: &str) -> bool {
     let path_env = std::env::var("PATH").unwrap();
     let builtins = ["exit", "echo", "type"];
-    let argv = input.split_whitespace().collect::<Vec<&str>>();
-    if argv.is_empty() {
+    let cmds = input.split_whitespace().collect::<Vec<&str>>();
+    let cmd = cmds[0];
+    let args = &cmds[1..];
+    if cmd.is_empty() {
         return false;
     }
 
-    match argv[0] {
+    match cmd {
         "exit" => {
-            if argv.len() == 1 || (argv.len() > 1 && argv[1] == "0") {
+            if cmds.len() == 1 || (cmds.len() > 1 && args[0] == "0") {
                 return true;
             } else {
-                println!("{}: command not found", argv[0]);
+                println!("{}: command not found", cmd.trim());
             }
         },
-        "echo" => println!("{}", argv[1..].join(" ")),
+        "echo" => println!("{}", args[0..].join(" ")),
         "type" => {
-            if argv.len() != 2 {
-                println!("type: expected 1 argument, got {}", argv.len() - 1);
+            if cmds.len() != 2 {
+                println!("type: expected 1 argument, got {}", cmds.len() - 1);
                 return false;
             }
-            let cmd = argv[1];
             if builtins.contains(&cmd) {
                 println!("{} is a shell builtin", cmd);
             } else {
@@ -32,14 +33,32 @@ fn handle_command(input: &str) -> bool {
                     split.find(|path| std::fs::metadata(format!("{}/{}", path, cmd)).is_ok())
                 {
                     println!("{cmd} is {path}/{cmd}");
+                } 
+                else if let Some(path) = find_exe(cmd){
+                    std::process::Command::new(path)
+                        .args(args)
+                        .status()
+                        .expect("failed to execute process");
                 } else {
                     println!("{cmd} not found");
                 }
             }
         },
-        _ => println!("{}: command not found", argv[0].trim()),
+        _ => println!("{}: command not found", cmd.trim()),
     }
     return false
+}
+
+fn find_exe(name: &str) -> Option<std::path::PathBuf> {
+    if let Ok(paths) = std::env::var("PATH") {
+        for path in std::env::split_paths(&paths) {
+            let exe_path = path.join(name);
+            if exe_path.is_file() {
+                return Some(exe_path);
+            }
+        }
+    }
+    return None;
 }
 
 fn main() {

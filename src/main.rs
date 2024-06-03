@@ -3,7 +3,7 @@ use std::io::{self, Write};
 
 fn handle_command(input: &str) -> bool {
     let path_env = std::env::var("PATH").unwrap();
-    let builtins = ["exit", "echo", "type"];
+    let builtins = ["exit", "echo", "type", "cd"];
     let cmds = input.split_whitespace().collect::<Vec<&str>>();
     let cmd = cmds[0];
     let args = &cmds[1..];

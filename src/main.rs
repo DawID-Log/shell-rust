@@ -11,7 +11,6 @@ fn handle_command(input: &str) -> bool {
         return false;
     }
 
-
     if let Some(path) = find_exe(cmd){
         std::process::Command::new(path)
             .args(args)
@@ -30,20 +29,21 @@ fn handle_command(input: &str) -> bool {
         },
         "echo" => println!("{}", args[0..].join(" ")),
         "type" => {
+            let arg = args[0];
             if cmds.len() != 2 {
                 println!("type: expected 1 argument, got {}", cmds.len() - 1);
                 return false;
             }
-            if builtins.contains(&cmd) {
-                println!("{} is a shell builtin", cmd);
+            if builtins.contains(&arg) {
+                println!("{} is a shell builtin", arg);
             } else {
                 let split = &mut path_env.split(':');
                 if let Some(path) =
-                    split.find(|path| std::fs::metadata(format!("{}/{}", path, cmd)).is_ok())
+                    split.find(|path| std::fs::metadata(format!("{}/{}", path, args[0])).is_ok())
                 {
-                    println!("{cmd} is {path}/{cmd}");
+                    println!("{arg} is {path}/{arg}");
                 } else {
-                    println!("{cmd} not found");
+                    println!("{arg} not found");
                 }
             }
         },

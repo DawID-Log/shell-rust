@@ -6,19 +6,21 @@ fn handle_command(input: &str) -> bool {
     let builtins = ["exit", "echo", "type"];
     let argv = input.split_whitespace().collect::<Vec<&str>>();
     if argv.is_empty() {
-        return true;
+        return false;
     }
-    let parts: Vec<&str> = input.split_whitespace().collect();
 
-    match parts[0] {
+    println!("argv: [{}]", argv[0..].join(" - "));
+
+
+    match argv[0] {
         "exit" => {
-            if parts.len() == 1 || (parts.len() > 1 && parts[1] == "0") {
-                return false;
+            if argv.len() == 1 || (argv.len() > 1 && argv[1] == "0") {
+                return true;
             } else {
-                println!("{}: command not found", input);
+                println!("{}: command not found", argv[0]);
             }
         },
-        "echo" => println!("{}", &input[5..]),
+        "echo" => println!("{}", argv[1..].join(" ")),
         "type" => {
             if argv.len() != 2 {
                 println!("type: expected 1 argument, got {}", argv.len() - 1);
@@ -28,7 +30,6 @@ fn handle_command(input: &str) -> bool {
             if builtins.contains(&cmd) {
                 println!("{} is a shell builtin", cmd);
             } else {
-                println!("{} not found", cmd);
                 let split = &mut path_env.split(':');
                 if let Some(path) =
                     split.find(|path| std::fs::metadata(format!("{}/{}", path, cmd)).is_ok())
@@ -39,7 +40,7 @@ fn handle_command(input: &str) -> bool {
                 }
             }
         },
-        _ => println!("{}: command not found", input.trim()),
+        _ => println!("{}: command not found", argv[0].trim()),
     }
     return false
 }

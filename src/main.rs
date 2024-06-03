@@ -49,9 +49,12 @@ fn handle_command(input: &str) -> bool {
         },
         "cd" => {
             let mut arg = args[0].to_owned();
-            if !arg.starts_with("/") {
+            if arg == "~" {
+                arg = std::env::var("HOME").unwrap();
+            }else if !arg.starts_with("/") {
                 arg = format!("{}/{}", std::env::current_dir().unwrap().to_str().unwrap(), arg);
             }
+
             if std::env::set_current_dir(std::path::Path::new(&arg)).is_err() {
                 println!("cd: {}: No such file or directory", &arg);
             }

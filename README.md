@@ -31,3 +31,14 @@ exec cargo run --quiet --release --target-dir=/tmp/codecrafters-shell-target
 ```
 
 # What is possible to do
+Running the help command results in a detailed description of the various commands available:
+## exit [n]
+"The exit utility shall cause the shell to exit from its current execution environment with the exit status specified by the unsigned decimal integer n. If the current execution environment is a subshell environment, the shell shall exit from the subshell environment with the specified exit status and continue in the environment from which that subshell environment was invoked; otherwise, the shell utility shall terminate with the specified exit status. If n is specified, but its value is not between 0 and 255 inclusively, the exit status is undefined."
+## echo [string...]
+"The echo utility writes its arguments to standard output, followed by a <newline>. If there are no arguments, only the <newline> is written."
+## type <command names>
+"The type command is used to describe how its argument would be translated if used as commands. It is also used to find out whether it is built-in or external binary file"
+## cd <directory>
+The type command is used to describe how its argument would be translated if used as commands. It is also used to find out whether it is built-in or external binary file"
+## pwd
+The pwd Linux command prints the current working directory path, starting from the root (/). Use the pwd command to find your way in the Linux file system structure maze or to pass the working directory in a Bash script."

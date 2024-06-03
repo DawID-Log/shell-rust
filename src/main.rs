@@ -9,9 +9,6 @@ fn handle_command(input: &str) -> bool {
         return false;
     }
 
-    println!("argv: [{}]", argv[0..].join(" - "));
-
-
     match argv[0] {
         "exit" => {
             if argv.len() == 1 || (argv.len() > 1 && argv[1] == "0") {

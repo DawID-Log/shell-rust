@@ -11,6 +11,15 @@ fn handle_command(input: &str) -> bool {
         return false;
     }
 
+
+    if let Some(path) = find_exe(cmd){
+        std::process::Command::new(path)
+            .args(args)
+            .status()
+            .expect("failed to execute process");
+        return false;
+    }
+
     match cmd {
         "exit" => {
             if cmds.len() == 1 || (cmds.len() > 1 && args[0] == "0") {
@@ -33,12 +42,6 @@ fn handle_command(input: &str) -> bool {
                     split.find(|path| std::fs::metadata(format!("{}/{}", path, cmd)).is_ok())
                 {
                     println!("{cmd} is {path}/{cmd}");
-                } 
-                else if let Some(path) = find_exe(cmd){
-                    std::process::Command::new(path)
-                        .args(args)
-                        .status()
-                        .expect("failed to execute process");
                 } else {
                     println!("{cmd} not found");
                 }
